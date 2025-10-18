@@ -1,13 +1,12 @@
 import random
 
-
-all_chars = 'abcdefghijklmnopqrstuvwxyz!@#$%^&*()?1234567890' 
 letters_only = 'abcdefghijklmnopqrstuvwxyz'         
 nums_only = '1234567890'
 special_only = '!@#$%^&*()?'                      
-chars_and_nums = 'abcdefghijklmnopqrstuvwxyz1234567890'
+chars_and_nums = letters_only + nums_only
 upper_lower = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
 all_chars_cases = upper_lower + special_only + nums_only
+all_chars = letters_only + nums_only + special_only
 
 
 basic_types = ["Letters Only", "Alphanumeric"]                                        # low security
@@ -23,7 +22,7 @@ option_list = [option for types in all_types for option in types] # each option 
 
 
 print(prompt)
-print(*option_list, sep="\n") # prints each option seperated by new line
+print(*option_list, sep="\n") # prints each option separated by new line
 user_inp = input("What would you like?: ").strip()
 
 
