@@ -48,12 +48,15 @@ elif user_inp == "Mixed Case Letters":
 elif user_inp == "Length Based":
     try:
         lenPut = int(input("What length?: "))
-        max_unique = len(set(all_chars_cases))
-        if lenPut > max_unique:
-            print(f"Max unique length is {max_unique}. Try a smaller number.")
+        if lenPut <= 5:
+            print("Come on bro get real, pick a real password length. Thanks.")
         else:
-            len_res = ''.join(random.sample(all_chars_cases, lenPut))
-            print(result + len_res)
+            max_unique = len(set(all_chars_cases))
+            if lenPut > max_unique:
+                print(f"Max unique length is {max_unique}. Try a smaller number.")
+            else:
+                len_res = ''.join(random.choice(all_chars_cases) for i in range(lenPut)) # allows repeats
+                print(result + len_res)
     except ValueError:
         print("Please enter a valid length. Thank you!")
 
@@ -62,6 +65,7 @@ elif user_inp == "Complex":
     print(result + complex_res)
 
 elif user_inp == "No Words/Patterns":
+    # TODO: add checks to avoid dictionary substrings and simple sequences
     no_patts = ''.join(random.sample(all_chars_cases, 20))
     print(result + no_patts)
 
