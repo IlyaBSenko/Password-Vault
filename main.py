@@ -8,11 +8,6 @@ chars_and_nums = 'abcdefghijklmnopqrstuvwxyz1234567890'
 all_chars_cases = 'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz!@#$%^&*()?1234567890'
 upper_lower = 'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz'
 
-
-password = ''
-for x in range(16):
-    password += random.choice(all_chars)
-
 basic_types = ["Letters Only", "Alphanumeric"]                                        # low security
 intermediate_types = ["Alphanumeric + Special", "Mixed Case Letters", "Length Based"] # Moderate security
 advanced_types = ["Complex", "No words/Patterns", "No Repeated Characters"]           # High Security
