@@ -6,7 +6,7 @@ nums_only = '1234567890'
 special_only = '!@#$%^&*()?'                      
 chars_and_nums = 'abcdefghijklmnopqrstuvwxyz1234567890'
 all_chars_cases = 'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz!@#$%^&*()?1234567890'
-upper_lower = 'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz'
+upper_lower = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
 
 basic_types = ["Letters Only", "Alphanumeric"]                                        # low security
 intermediate_types = ["Alphanumeric + Special", "Mixed Case Letters", "Length Based"] # Moderate security
