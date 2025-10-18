@@ -1,10 +1,4 @@
 import random
-import requests
-
-word_site = "https://www.mit.edu/~ecprice/wordlist.10000"
-
-response = requests.get(word_site)
-WORDS = response.content.splitlines()
 
 all_chars = 'abcdefghijklmnopqrstuvwxyz!@#$%^&*()?1234567890' # len = 37
 letters_only = 'abcdefghijklmnopqrstuvwxyz'         # 26
@@ -29,8 +23,8 @@ prompt = "What kind of password would you like? Options: "
 option_list = [option for types in all_types for option in types] # each option in each type in all types list
 
 print(prompt)
-print(*option_list, sep="\n")
-user_inp = print(input("What would you like?: "))
+print(*option_list, sep="\n") # prints each option seperated by new line
+user_inp = input("What would you like?: ").strip()
 
 
 
