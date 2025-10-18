@@ -6,9 +6,12 @@ word_site = "https://www.mit.edu/~ecprice/wordlist.10000"
 response = requests.get(word_site)
 WORDS = response.content.splitlines()
 
-all_chars = 'abcdefghijklmnopqrstuvwxyz!@#$%^&*()?' # len = 37
+all_chars = 'abcdefghijklmnopqrstuvwxyz!@#$%^&*()?1234567890' # len = 37
 letters_only = 'abcdefghijklmnopqrstuvwxyz'         # 26
+nums_only = '1234567890'
 special_only = '!@#$%^&*()?'                        # 11
+chars_and_nums = 'abcdefghijklmnopqrstuvwxyz1234567890'
+all_chars_cases = 'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz!@#$%^&*()?1234567890'
 
 
 password = ''
@@ -34,10 +37,35 @@ user_inp = print(input("What would you like?: "))
 result = "Your Password Is: "
 
 if user_inp == "Letters Only":
-    chars_only = ''.join(random.sample(all_chars, 15)) # random group of chars only, 15 character limit
+    chars_only = ''.join(random.sample(all_chars, 15)) # random group of selected chars only, character limit
     print(result + chars_only)
 
 if user_inp == "Alphanumeric":
-    alpha_n = 
+    alpha_n = ''.join(random.sample(chars_and_nums, 15))
+    print(result + chars_and_nums)
+
+if user_inp == "Alphanumeric + Special":
+    alpha_num_and_s = ''.join(random.sample(all_chars, 15))
+    print(result + alpha_num_and_s)
+
+if user_inp == "Mixed Case Letters":
+    mixed_chars = ''.join(random.sample(all_chars_cases))
+    print(result + mixed_chars)
+
+if user_inp == "Length Based":
+    lenPut = int(input("What length?: "))
+    len_res = ''.join(random.sample(all_chars_cases, lenPut))
+
+if user_inp == "Complex":
+    complex_res = ''.join(random.sample(all_chars_cases, 25))
+    print(result + complex_res)
+
+if user_inp == "No Words Patterns":
+    no_patts = ''.join(random.sample(all_chars_cases, 20))
+    print(result + no_patts)
+
+if user_inp == "No Repeated Characters":
+    no_reps = ''.join(random.sample(all_chars_cases, 20))
+    print(result + no_reps)
     
 
