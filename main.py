@@ -10,7 +10,7 @@ upper_lower = 'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz'
 
 basic_types = ["Letters Only", "Alphanumeric"]                                        # low security
 intermediate_types = ["Alphanumeric + Special", "Mixed Case Letters", "Length Based"] # Moderate security
-advanced_types = ["Complex", "No words/Patterns", "No Repeated Characters"]           # High Security
+advanced_types = ["Complex", "No Words/Patterns", "No Repeated Characters"]           # High Security
 
 all_types = [basic_types, intermediate_types, advanced_types]
 
