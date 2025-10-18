@@ -6,6 +6,7 @@ nums_only = '1234567890'
 special_only = '!@#$%^&*()?'                      
 chars_and_nums = 'abcdefghijklmnopqrstuvwxyz1234567890'
 all_chars_cases = 'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz!@#$%^&*()?1234567890'
+upper_lower = 'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz'
 
 
 password = ''
@@ -14,7 +15,7 @@ for x in range(16):
 
 basic_types = ["Letters Only", "Alphanumeric"]                                        # low security
 intermediate_types = ["Alphanumeric + Special", "Mixed Case Letters", "Length Based"] # Moderate security
-advanced_types = ["Complex", "No words/patterns", "No Repeated Characters"]           # High Security
+advanced_types = ["Complex", "No words/Patterns", "No Repeated Characters"]           # High Security
 
 all_types = [basic_types, intermediate_types, advanced_types]
 
@@ -43,7 +44,7 @@ elif user_inp == "Alphanumeric + Special":
     print(result + alpha_num_and_s)
 
 elif user_inp == "Mixed Case Letters":
-    mixed_chars = ''.join(random.sample(all_chars_cases, 15))
+    mixed_chars = ''.join(random.sample(upper_lower, 15))
     print(result + mixed_chars)
 
 elif user_inp == "Length Based":
