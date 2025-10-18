@@ -31,7 +31,7 @@ user_inp = input("What would you like?: ").strip()
 result = "Your Password Is: "
 
 if user_inp == "Letters Only":
-    chars_only = ''.join(random.sample(all_chars, 15)) # random group of selected chars only, character limit
+    chars_only = ''.join(random.sample(letters_only, 15)) # random group of selected chars only, character limit
     print(result + chars_only)
 
 if user_inp == "Alphanumeric":
