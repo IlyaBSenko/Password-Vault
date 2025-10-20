@@ -58,7 +58,7 @@ def main_screen():
     root.title("Password Generator")
 
     # title
-    title_text = ("Courier New", 25)
+    title_text = ("Courier New", 30)
     title_label = tk.Label(
         root, 
         text="PassWord Generator",
@@ -68,18 +68,28 @@ def main_screen():
     )
     title_label.pack(pady=20)
 
+    prompt_text = ("Courier New", 18)
+    prompt_text = tk.Label(
+         root, 
+         text="What would you like to do?",
+         fg="green",
+         bg="black",
+         font=prompt_text
+    )
+    prompt_text.pack(pady=30)
+
 
     button_row = tk.Frame(root, bg="black")
     button_row.pack(side='bottom', pady=150, anchor='s')
 
 
     # view passwords button
-    view_pw = tk.Button(button_row, text="View Passwords", fg="darkgreen", bg="black", command=view_passwords)
+    view_pw = tk.Button(button_row, text="View Passwords", fg="darkgreen", bg="black", width=15, height=2, command=view_passwords)
     view_pw.pack(side="left", padx=30)
 
 
     # generate password button
-    start_button = tk.Button(button_row, text="Generate Password", fg="darkgreen", bg="black", command=start_progress)
+    start_button = tk.Button(button_row, text="Generate Password", fg="darkgreen", bg="black", width=15, height=2, command=start_progress)
     start_button.pack(side="right", padx=30)
 
     progress = ttk.Progressbar(
