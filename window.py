@@ -48,6 +48,84 @@ def clear_root():
             widget.destroy()
 
 
+def on_add_update():
+        clear_root()
+        site = simpledialog.askstring("Add / Update", "Site name: ")
+        if not site:
+            return
+        
+        pwd = simpledialog.askstring("Add / Update", f"Password for {site}: ") # maybe add show="*"
+
+        if pwd is None:
+            return
+        set_password(site, pwd) # stores in OS keychain
+
+
+
+def add_update_screen():
+    clear_root()
+    root.title("Add / Update Password")
+
+    # Title
+    tk.Label(root, text="Add / Update Password",
+             fg="green", bg="black", font=("Courier New", 20)).pack(pady=(30, 10))
+
+    content = tk.Frame(root, bg="black")
+    content.pack(fill="both", expand=True, padx=20)
+
+    # Site name
+    tk.Label(content, text="Website / Service name:",
+             fg="green", bg="black", font=("Courier New", 12)).pack(pady=(10, 4))
+    site_var = tk.StringVar()
+    site_entry = tk.Entry(content, textvariable=site_var, bg="darkgrey",
+                          width=24, font=("Courier New", 14))
+    site_entry.pack(pady=(0, 12))
+    site_entry.focus_set()
+
+    # Password (masked)
+    tk.Label(content, text="Password:",
+             fg="green", bg="black", font=("Courier New", 12)).pack(pady=(6, 4))
+    pwd_var = tk.StringVar()
+    pwd_entry = tk.Entry(content, textvariable=pwd_var, bg="darkgrey", show="*",
+                         width=24, font=("Courier New", 14))
+    pwd_entry.pack(pady=(0, 12))
+
+    # Result / status
+    status = tk.Label(content, text="", fg="lime", bg="black", font=("Courier New", 12))
+    status.pack(pady=(6, 8))
+
+    def save_password(event=None):
+        site_raw = site_var.get().strip()
+        if not site_raw:
+            status.config(text="Please enter a website name", fg="yellow")
+            return
+        pwd = pwd_var.get()
+        if pwd == "":
+            status.config(text="Please enter a password", fg="yellow")
+            return
+
+        # store (your vault.set_password normalizes lower/strip already; if not, do site_raw.lower())
+        set_password(site_raw, pwd)
+        status.config(text=f"Saved password for {site_raw}", fg="lime")
+        # Optional: clear fields or return to main
+        # site_var.set(""); pwd_var.set("")
+        # main_screen()
+
+    # Bind Enter on the password field to save
+    pwd_entry.bind("<Return>", save_password)
+
+    # Buttons row
+    btn_row = tk.Frame(root, bg="black")
+    btn_row.pack(side="bottom", pady=20, anchor="s")
+
+    tk.Button(btn_row, text="Save", fg="darkgreen", bg="black",
+              width=12, command=save_password).pack(side="left", padx=10)
+
+    tk.Button(btn_row, text="Back To Menu", fg="green", bg="black",
+              width=15, command=main_screen).pack(side="left", padx=10)
+
+
+
 
 # remake main window when back button is pressed
 def main_screen():
@@ -78,18 +156,23 @@ def main_screen():
     prompt_text.pack(pady=30)
 
 
-    button_row = tk.Frame(root, bg="black")
-    button_row.pack(side='bottom', pady=150, anchor='s')
+    button_section = tk.Frame(root, bg="black")
+    button_section.pack(side='bottom', pady=120, anchor='s')
 
+    top_buttons = tk.Frame(button_section, bg="black")
+    top_buttons.pack(pady=(0, 10))
 
-    # view passwords button
-    view_pw = tk.Button(button_row, text="View Passwords", fg="darkgreen", bg="black", width=15, height=2, command=view_passwords)
-    view_pw.pack(side="left", padx=30)
+    # two side-by-side buttons
+    view_pw = tk.Button(top_buttons, text="View Passwords", fg="darkgreen", bg="black", width=15, height=2, command=view_passwords)
+    view_pw.pack(side="left", padx=20)
 
+    start_button = tk.Button(top_buttons, text="Generate Password", fg="darkgreen", bg="black", width=15, height=2, command=start_progress)
+    start_button.pack(side="right", padx=20)
 
-    # generate password button
-    start_button = tk.Button(button_row, text="Generate Password", fg="darkgreen", bg="black", width=15, height=2, command=start_progress)
-    start_button.pack(side="right", padx=30)
+    # centered Add/Update button below them
+    add_update_btn = tk.Button(button_section, text="Add / Update Website or Password", fg="darkgreen", bg="black", width=30, pady=55, command=add_update_screen)
+    add_update_btn.pack(pady=(.5, 0))
+
 
     progress = ttk.Progressbar(
         root, 
@@ -141,26 +224,15 @@ def vault_screen():
     result_label.pack(pady=(0, 10))
 
 
-    def on_add_update():
-        site = simpledialog.askstring("Add / Update", "Site name: ")
-        if not site:
-            return
-        
-        pwd = simpledialog.askstring("Add / Update", f"Password for {site}: ") # maybe add show="*"
-
-        if pwd is None:
-            return
-        set_password(site, pwd) # stores in OS keychain
-        result_label.config(text=f"Saved password for {site.strip()}", fg="lime")
-
-
     def on_query_enter(event=None):
         site = search_var.get()
         key = site.strip().lower()
 
         if not key:
             result_label.config(text="Please enter a website where you have a password", fg="yellow")
+            return
 
+        
         pwd = get_password(key)
 
         if pwd:
@@ -239,6 +311,8 @@ def view_passwords():
                 error_label.pack(pady=(0, 5))
             # auto-hide after 1500ms (optional)
             hide_timer["id"] = root.after(1500, lambda: error_label.pack_forget())
+
+    
     
     search_entry.bind("<Return>", check_password)
 
