@@ -103,6 +103,9 @@ def main_screen():
     progress.pack(pady=15)
 
 
+hide_timer = {"id": None} # holder to cancel timers
+
+
 
 def vault_screen():
     clear_root()
@@ -137,7 +140,7 @@ def vault_screen():
     footer = tk.Frame(root, bg="black")
     footer.pack(side='bottom', pady=20, anchor='s')
 
-    back_button = tk.Button(footer, text="Back", fg="green", bg="black", height=2, width=3, font=("Courier New", 10), command=main_screen)
+    back_button = tk.Button(footer, text="Back To Menu", fg="green", bg="black", height=2, width=15, font=("Courier New", 10), command=main_screen)
     back_button.pack()
 
 
@@ -181,9 +184,6 @@ def view_passwords():
         bg="black",
         font=("Courier New", 12)
     )
-
-
-    hide_timer = {"id": None} # holder to cancel timers
 
 
 
