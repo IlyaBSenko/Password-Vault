@@ -16,10 +16,10 @@ style = ttk.Style()
 style.theme_use('clam')
 style.configure(
     "DarkGreen.Horizontal.TProgressbar", 
-    background='#006400',             # fill color
-    troughcolor='black',                # background (empty area)
-    bordercolor="black",                # for the border to match the background
-    lightcolor = "#006400",           # removes 3D shading effect
+    background='#006400',             
+    troughcolor='black',                
+    bordercolor="black",          
+    lightcolor = "#006400",           
     darkcolor = "#006400"
 )
 
@@ -183,7 +183,6 @@ def letters_only():
         command=main_screen
     )
     back_button.pack()
-
 
 
 
