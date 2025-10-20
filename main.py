@@ -1,6 +1,7 @@
 import tkinter  as tk
 from tkinter import ttk
 from vault import get_password, set_password, delete_password
+from generate import generate_password
 
 
 # root of the tkinter tree
@@ -58,15 +59,15 @@ def generate_screen():
     top_buttons.pack(pady=(0, 8))
 
     low_btn = tk.Button(top_buttons, text="Low Security", fg="darkgreen", bg="black",
-                        width=15, height=2, command=view_passwords)
+                        width=15, height=2, command=low_sec)
     low_btn.pack(side="left", padx=20)
 
     med_btn = tk.Button(top_buttons, text="Medium Security", fg="darkgreen", bg="black",
-                        width=15, height=2, command=start_progress)
+                        width=15, height=2, command=low_sec)
     med_btn.pack(side="right", padx=20)
 
     high_btn = tk.Button(button_section, text="High Security", fg="darkgreen", bg="black",
-                         width=12, pady=10, command=add_update_screen)
+                         width=12, pady=10, command=low_sec)
     high_btn.pack(pady=(10, 0))
 
     footer = tk.Frame(root, bg="black")
@@ -83,6 +84,106 @@ def generate_screen():
         command=main_screen
     )
     back_button.pack()
+
+
+def low_sec():
+    clear_root()
+    root.title("Low Security Types")
+
+    main_frame = tk.Frame(root, bg="black")
+    main_frame.pack(expand=True, fill="both")
+
+    prompt_label = tk.Label(
+        main_frame,
+        text="Low Security Types",
+        bg="black",
+        fg="darkgreen",
+        font=("Courier New", 20)
+    )
+    prompt_label.pack(pady=((50, 15)))
+
+    prompt_label2 = tk.Label(
+        main_frame,
+        text="Which Option Will You Pick?",
+        bg="black",
+        fg="darkgreen",
+        font=("Courier New", 20)
+    )
+    prompt_label2.pack(pady=((20, 5)))
+
+    button_section = tk.Frame(main_frame, bg="black")
+    button_section.pack(side="bottom", pady=30, anchor='s')  
+
+    top_buttons = tk.Frame(button_section, bg="black")
+    top_buttons.pack(pady=(0, 8))
+
+    letters_only_btn = tk.Button(top_buttons, text="Letters Only", fg="darkgreen", bg="black",
+                        width=15, height=2, command=letters_only)
+    letters_only_btn.pack(side="left", padx=20)
+
+    alphanumeric_btn = tk.Button(top_buttons, text="Alphanumeric", fg="darkgreen", bg="black",
+                        width=15, height=2, command=alphanumeric)
+    alphanumeric_btn.pack(side="right", padx=20)
+
+    footer = tk.Frame(root, bg="black")
+    footer.pack(side="bottom", pady=25, anchor='s')  
+
+    back_button = tk.Button(
+        footer,
+        text="Back To Menu",
+        fg="green",
+        bg="black",
+        height=2,
+        width=15,
+        font=("Courier New", 10),
+        command=main_screen
+    )
+    back_button.pack()
+
+
+def letters_only():
+    clear_root()
+    root.title("Letters Only")
+
+    tk.Label(
+        root,
+        text="Letters Only",
+        fg="green",
+        bg="black",
+        font=("Courier New", 28)
+    ).pack(pady=(50, 10))
+
+    password = generate_password("Letters Only")
+    pw_font=("Courier New", 18)
+    
+    tk.Label(
+        root,
+        text="Generated Password: ",
+        fg="lime",
+        bg="black",
+        font=pw_font
+    ).pack(pady=(50, 10))
+
+    tk.Label(
+        root,
+        text=password,
+        fg="lime",
+        bg="black",
+        font=pw_font
+    ).pack(pady=(10))
+
+    back_button = tk.Button(
+        root,
+        text="Back To Menu",
+        fg="green",
+        bg="black",
+        height=2,
+        width=15,
+        font=("Courier New", 10),
+        command=main_screen
+    )
+    back_button.pack()
+
 
 
 
