@@ -1,6 +1,7 @@
 import tkinter  as tk
 from tkinter import ttk
 from vault import get_password, set_password, delete_password
+from tkinter import simpledialog
 
 
 # root of the tkinter tree
@@ -134,24 +135,44 @@ def vault_screen():
     search_var = tk.StringVar()
     search_entry = tk.Entry(content, textvariable=search_var, bg="darkgrey", width=20, font=("Courier New", 14))
     search_entry.pack(pady=(25, 50))
-    search_entry.bind("<Return>", on_query_enter)
     search_entry.focus_set()
 
     result_label = tk.Label(content, text='', fg="lime", bg="black", font=("Courier New", 12))
     result_label.pack(pady=(0, 10))
 
+
+    def on_add_update():
+        site = simpledialog.askstring("Add / Update", "Site name: ")
+        if not site:
+            return
+        
+        pwd = simpledialog.askstring("Add / Update", f"Password for {site}: ") # maybe add show="*"
+
+        if pwd is None:
+            return
+        set_password(site, pwd) # stores in OS keychain
+        result_label.config(text=f"Saved password for {site.strip()}", fg="lime")
+
+
     def on_query_enter(event=None):
         site = search_var.get()
-        pwd = get_password(site)
+        key = site.strip().lower()
+
+        if not key:
+            result_label.config(text="Please enter a website where you have a password", fg="yellow")
+
+        pwd = get_password(key)
 
         if pwd:
             result_label.config(text=f"Password for {site}: {pwd}", fg="lime")
-            # optional: copy to clipboard, check to see if useful or not
+            # copy to clipboard, check to see if useful or not
             root.clipboard_clear()
             root.clipboard_append(pwd)
             root.update()
         else:
             result_label.config(text="Password not found for this website", fg="red")
+
+    search_entry.bind("<Return>", on_query_enter)
 
     footer = tk.Frame(root, bg="black")
     footer.pack(side='bottom', pady=20, anchor='s')
