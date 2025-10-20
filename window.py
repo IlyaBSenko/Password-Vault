@@ -9,6 +9,18 @@ root.geometry("400x300")
 root.configure(bg='black')
 
 
+# title
+title_text = ("Courier New", 25)
+title_label = tk.Label(
+    root, 
+    text="PassWord Generator",
+    fg="green",
+    bg="black",
+    font=title_text
+)
+title_label.pack(pady=20)
+
+
 # progressbar widget
 progress = ttk.Progressbar(
     root, 
