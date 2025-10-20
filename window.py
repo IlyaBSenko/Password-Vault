@@ -1,3 +1,5 @@
+# window.py (gui)
+
 import tkinter  as tk
 from tkinter import ttk
 import time
@@ -5,7 +7,7 @@ import time
 # root of the tkinter tree
 root = tk.Tk()
 root.title("Password Generator")
-root.geometry("400x300")
+root.geometry("500x500")
 root.configure(bg='black')
 
 
@@ -30,7 +32,7 @@ progress = ttk.Progressbar(
     mode="determinate",
     maximum=100
 )
-progress.pack(pady=55)
+progress.pack(pady=95)
 
 
 def start_progress(i=0): # doesnt freeze window when you start progress
@@ -53,8 +55,13 @@ style.configure(
 
 
 # button for progress
-start_button = tk.Button(root, text="Generate Password", command=start_progress)
-start_button.pack(pady=45)
+start_button = tk.Button(root, 
+    text="Generate Password", 
+    fg="darkgreen",
+    bg="black",
+    command=start_progress,
+)
+start_button.pack(pady=35)
 
 
 root.mainloop()

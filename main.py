@@ -1,5 +1,7 @@
 import random
 
+# main.py
+
 letters_only = 'abcdefghijklmnopqrstuvwxyz'         
 nums_only = '1234567890'
 special_only = '!@#$%^&*()?'                      
