@@ -1,8 +1,6 @@
-# window.py (gui)
-
 import tkinter  as tk
 from tkinter import ttk
-# import main
+from vault import *
 
 
 # root of the tkinter tree
@@ -136,6 +134,15 @@ def vault_screen():
     search_var = tk.StringVar()
     search_entry = tk.Entry(content, textvariable=search_var, bg="darkgrey", width=20, show="*", font=("Courier New", 14))
     search_entry.pack(pady=(25, 50))
+
+    def on_query_enter(event=None):
+        site = search_var.get()
+        pwd = get_password(site)
+
+        if pwd:
+            result_label.config(text=f"Password for {site}: {pwd}", fg="lime")
+        else:
+            result_label.config(text="Password not found for this website", fg="red")
 
     footer = tk.Frame(root, bg="black")
     footer.pack(side='bottom', pady=20, anchor='s')
