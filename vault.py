@@ -1,6 +1,6 @@
 import keyring
 
-SERVICE = "PasswordGeneratorVault"
+SERVICE = "Vault"
 
 def set_password(site: str, password: str):
     """Store or update a password in the OS keychain."""
