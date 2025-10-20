@@ -1,6 +1,6 @@
 import tkinter  as tk
 from tkinter import ttk
-from vault import *
+from vault import get_password, set_password, delete_password
 
 
 # root of the tkinter tree
@@ -132,8 +132,13 @@ def vault_screen():
     enter_website.pack(pady=(40, 10))
 
     search_var = tk.StringVar()
-    search_entry = tk.Entry(content, textvariable=search_var, bg="darkgrey", width=20, show="*", font=("Courier New", 14))
+    search_entry = tk.Entry(content, textvariable=search_var, bg="darkgrey", width=20, font=("Courier New", 14))
     search_entry.pack(pady=(25, 50))
+    search_entry.bind("<Return>", on_query_enter)
+    search_entry.focus_set()
+
+    result_label = tk.Label(content, text='', fg="lime", bg="black", font=("Courier New", 12))
+    result_label.pack(pady=(0, 10))
 
     def on_query_enter(event=None):
         site = search_var.get()
@@ -141,6 +146,10 @@ def vault_screen():
 
         if pwd:
             result_label.config(text=f"Password for {site}: {pwd}", fg="lime")
+            # optional: copy to clipboard, check to see if useful or not
+            root.clipboard_clear()
+            root.clipboard_append(pwd)
+            root.update()
         else:
             result_label.config(text="Password not found for this website", fg="red")
 
