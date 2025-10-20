@@ -92,7 +92,7 @@ def view_passwords():
     label = tk.Label(root, text="Saved Passwords", fg="green", bg="black", font=("Courier New", 20))
     label.pack(pady=20)
 
-    back_button = tk.Button(root, text="Back", fg="green", bg="black", font=("Courier New", 20))
+    back_button = tk.Button(root, text="Back", fg="green", bg="black", font=("Courier New", 20), command=main_screen)
     back_button.pack(pady=20)
 
 
