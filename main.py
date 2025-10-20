@@ -26,6 +26,8 @@ print(*option_list, sep="\n") # prints each option separated by new line
 user_inp = input("What would you like?: ").strip()
 
 
+# user input results
+
 result = "Your Password Is: "
 
 if user_inp == "Letters Only":
@@ -51,11 +53,8 @@ elif user_inp == "Length Based":
             print("Come on bro get real, pick a real password length. Thanks.")
         else:
             max_unique = len(set(all_chars_cases))
-            if lenPut > max_unique:
-                print(f"Max unique length is {max_unique}. Try a smaller number.")
-            else:
-                len_res = ''.join(random.choice(all_chars_cases) for i in range(lenPut)) # allows repeats
-                print(result + len_res)
+            len_res = ''.join(random.choice(all_chars_cases) for i in range(lenPut)) # allows repeats
+            print(result + len_res)
     except ValueError:
         print("Please enter a valid length. Thank you!")
 
