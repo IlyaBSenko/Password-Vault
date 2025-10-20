@@ -5,6 +5,7 @@ from tkinter import ttk
 import time
 # import main
 
+
 # root of the tkinter tree
 root = tk.Tk()
 root.title("Password Generator")
@@ -12,51 +13,7 @@ root.geometry("500x500")
 root.configure(bg='black')
 
 
-# title
-title_text = ("Courier New", 25)
-title_label = tk.Label(
-    root, 
-    text="PassWord Generator",
-    fg="green",
-    bg="black",
-    font=title_text
-)
-title_label.pack(pady=20)
-
-
-# view passwords when button is pressed
-def view_passwords():
-    for widget in root.winfo_children():
-        widget.destroy()
-
-    root.title("View Passwords")
-
-    label = tk.Label(root, text="Saved Passwords", fg="green", bg="black", font=("Courier New", 20))
-    label.pack(pady=20)
-
-    back_button = tk.Button(root, text="Back", fg="green", bg="black", font=("Courier New", 20))
-    back_button.pack(pady=20)
-
-
-# progressbar widget
-progress = ttk.Progressbar(
-    root, 
-    style="DarkGreen.Horizontal.TProgressbar", 
-    orient="horizontal", 
-    length=300, 
-    mode="determinate",
-    maximum=100
-)
-progress.pack(pady=95)
-
-
-def start_progress(i=0): # doesnt freeze window when you start progress
-    if i <= 100:
-        progress['value'] = i
-        root.after(15, start_progress, i + 1)
-
-
-# progress bar style ???
+# progress bar style 
 style = ttk.Style()
 style.theme_use('clam')
 style.configure(
@@ -69,26 +26,77 @@ style.configure(
 )
 
 
-# view passwords button
-view_pw = tk.Button(
-    root, 
-    text="View Passwords", 
-    fg="darkgreen",
-    bg="black",
-    command=open_new_window,
-)
-view_pw.pack(side="left", padx=55, pady=35)
+progress = None
 
 
-# generate password button
-start_button = tk.Button(root, 
-    text="Generate Password", 
-    fg="darkgreen",
-    bg="black",
-    command=start_progress,
-)
-start_button.pack(side="right", padx=55, pady=35)
+def start_progress(i=0): # doesnt freeze window when you start progress
+    if not isinstance(progress, ttk.Progressbar) or not str(progress):
+        return
+     
+    if i <= 100:
+        progress['value'] = i
+        root.after(15, start_progress, i + 1)
+    else:
+        progress.pack_forget()
+        progress['value'] = 0
+        progress.pack(pady=95)
+    
 
 
+def clear_root():
+    for widget in root.winfo_children():
+            widget.destroy()
+
+
+# remake main window when back button is pressed
+def main_screen():
+    global progress
+    clear_root()
+
+    root.title("Password Generator")
+
+    # title
+    title_text = ("Courier New", 25)
+    title_label = tk.Label(
+        root, 
+        text="PassWord Generator",
+        fg="green",
+        bg="black",
+        font=title_text
+    )
+    title_label.pack(pady=20)
+
+    view_pw = tk.Button(root, text="View Passwords", fg="darkgreen", bg="black", command=view_passwords)
+    view_pw.pack(side="left", padx=55, pady=35)
+
+    start_button = tk.Button(root, text="Generate Password", fg="darkgreen", bg="black", command=start_progress)
+    start_button.pack(side="right", padx=55, pady=35)
+
+    progress = ttk.Progressbar(
+        root, 
+        style="DarkGreen.Horizontal.TProgressbar", 
+        orient="horizontal", 
+        length=300, 
+        mode="determinate",
+        maximum=100
+    )
+    progress.pack(pady=95)
+
+    progress.pack(pady=95)
+
+    # view passwords when button is pressed
+def view_passwords():
+    clear_root()
+    root.title("View Passwords")
+
+    label = tk.Label(root, text="Saved Passwords", fg="green", bg="black", font=("Courier New", 20))
+    label.pack(pady=20)
+
+    back_button = tk.Button(root, text="Back", fg="green", bg="black", font=("Courier New", 20))
+    back_button.pack(pady=20)
+
+
+
+main_screen()
 root.mainloop()
 
