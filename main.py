@@ -26,6 +26,66 @@ style.configure(
 progress = None
 
 
+def generate_screen():
+    clear_root()
+    root.title("Security Types")
+
+    main_frame = tk.Frame(root, bg="black")
+    main_frame.pack(expand=True, fill="both")
+
+    prompt_label = tk.Label(
+        main_frame,
+        text="What Security Type",
+        bg="black",
+        fg="darkgreen",
+        font=("Courier New", 20)
+    )
+    prompt_label.pack(pady=((50, 15)))
+
+    prompt_label2 = tk.Label(
+        main_frame,
+        text="Would You Like?",
+        bg="black",
+        fg="darkgreen",
+        font=("Courier New", 20)
+    )
+    prompt_label2.pack(pady=((20, 5)))
+
+    button_section = tk.Frame(main_frame, bg="black")
+    button_section.pack(side="bottom", pady=30, anchor='s')  
+
+    top_buttons = tk.Frame(button_section, bg="black")
+    top_buttons.pack(pady=(0, 8))
+
+    low_btn = tk.Button(top_buttons, text="Low Security", fg="darkgreen", bg="black",
+                        width=15, height=2, command=view_passwords)
+    low_btn.pack(side="left", padx=20)
+
+    med_btn = tk.Button(top_buttons, text="Medium Security", fg="darkgreen", bg="black",
+                        width=15, height=2, command=start_progress)
+    med_btn.pack(side="right", padx=20)
+
+    high_btn = tk.Button(button_section, text="High Security", fg="darkgreen", bg="black",
+                         width=12, pady=10, command=add_update_screen)
+    high_btn.pack(pady=(10, 0))
+
+    footer = tk.Frame(root, bg="black")
+    footer.pack(side="bottom", pady=25, anchor='s')  
+
+    back_button = tk.Button(
+        footer,
+        text="Back To Menu",
+        fg="green",
+        bg="black",
+        height=2,
+        width=15,
+        font=("Courier New", 10),
+        command=main_screen
+    )
+    back_button.pack()
+
+
+
 # progress bar animation
 def start_progress(i=0): # doesn't freeze window when you start progress
     if not isinstance(progress, ttk.Progressbar) or not progress.winfo_exists():
@@ -117,6 +177,8 @@ def add_update_screen():
 
 
 
+
+
 # remake main window when back button is pressed
 def main_screen():
     global progress
@@ -156,7 +218,7 @@ def main_screen():
     view_pw = tk.Button(top_buttons, text="View Passwords", fg="darkgreen", bg="black", width=15, height=2, command=view_passwords)
     view_pw.pack(side="left", padx=20)
 
-    start_button = tk.Button(top_buttons, text="Generate Password", fg="darkgreen", bg="black", width=15, height=2, command=start_progress)
+    start_button = tk.Button(top_buttons, text="Generate Password", fg="darkgreen", bg="black", width=15, height=2, command=generate_screen)
     start_button.pack(side="right", padx=20)
 
     # centered Add/Update button below them
@@ -177,6 +239,8 @@ def main_screen():
 
 
 hide_timer = {"id": None} # holder to cancel timers
+
+
 
 
 
@@ -244,6 +308,8 @@ def vault_screen():
 
     back_button = tk.Button(footer, text="Back To Menu", fg="green", bg="black", height=2, width=15, font=("Courier New", 10), command=main_screen)
     back_button.pack()
+
+
 
 
 

@@ -24,7 +24,6 @@ all_types = [basic_types, intermediate_types, advanced_types]
 
 
 def get_options():
-    """Flat list for your dropdown."""
     return [opt for group in all_types for opt in group]
 
 
