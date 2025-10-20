@@ -122,7 +122,7 @@ def low_sec():
     letters_only_btn.pack(side="left", padx=20)
 
     alphanumeric_btn = tk.Button(top_buttons, text="Alphanumeric", fg="darkgreen", bg="black",
-                        width=15, height=2, command=alphanumeric)
+                        width=15, height=2, command=letters_only) # alphanumeric
     alphanumeric_btn.pack(side="right", padx=20)
 
     footer = tk.Frame(root, bg="black")
