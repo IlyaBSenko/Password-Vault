@@ -29,7 +29,7 @@ progress = None
 
 
 # progress bar animation
-def start_progress(i=0): # doesnt freeze window when you start progress
+def start_progress(i=0): # doesn't freeze window when you start progress
     if not isinstance(progress, ttk.Progressbar) or not progress.winfo_exists():
         return
      
@@ -101,6 +101,7 @@ def main_screen():
         maximum=100
     )
     progress.pack(pady=15)
+
 
 
 def vault_screen():
@@ -185,6 +186,7 @@ def view_passwords():
     hide_timer = {"id": None} # holder to cancel timers
 
 
+
     def check_password(event=None):
         if hide_timer["id"] is not None:
             root.after_cancel(hide_timer["id"])
@@ -203,14 +205,13 @@ def view_passwords():
     
     search_entry.bind("<Return>", check_password)
 
+
     footer = tk.Frame(root, bg="black")
     footer.pack(side='bottom', pady=20, anchor='s')
 
+
     back_button = tk.Button(footer, text="Back To Menu", fg="green", bg="black", height=2, width=15, font=("Courier New", 10), command=main_screen)
     back_button.pack()
-
-
-
 
 
 
