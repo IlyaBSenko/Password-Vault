@@ -2,7 +2,6 @@
 
 import tkinter  as tk
 from tkinter import ttk
-import time
 # import main
 
 
@@ -30,7 +29,7 @@ progress = None
 
 
 def start_progress(i=0): # doesnt freeze window when you start progress
-    if not isinstance(progress, ttk.Progressbar) or not str(progress):
+    if not isinstance(progress, ttk.Progressbar) or not progress.winfo_exists():
         return
      
     if i <= 100:
@@ -66,11 +65,19 @@ def main_screen():
     )
     title_label.pack(pady=20)
 
-    view_pw = tk.Button(root, text="View Passwords", fg="darkgreen", bg="black", command=view_passwords)
-    view_pw.pack(side="left", padx=55, pady=35)
 
-    start_button = tk.Button(root, text="Generate Password", fg="darkgreen", bg="black", command=start_progress)
-    start_button.pack(side="right", padx=55, pady=35)
+    button_row = tk.Frame(root, bg="black")
+    button_row.pack(side='bottom', pady=150, anchor='s')
+
+
+    # view passwords button
+    view_pw = tk.Button(button_row, text="View Passwords", fg="darkgreen", bg="black", command=view_passwords)
+    view_pw.pack(side="left", padx=30)
+
+
+    # generate password button
+    start_button = tk.Button(button_row, text="Generate Password", fg="darkgreen", bg="black", command=start_progress)
+    start_button.pack(side="right", padx=30)
 
     progress = ttk.Progressbar(
         root, 
@@ -80,17 +87,17 @@ def main_screen():
         mode="determinate",
         maximum=100
     )
-    progress.pack(pady=95)
+    progress.pack(pady=15)
 
-    progress.pack(pady=95)
 
-    # view passwords when button is pressed
+
+# view passwords when button is pressed
 def view_passwords():
     clear_root()
     root.title("View Passwords")
 
     label = tk.Label(root, text="Saved Passwords", fg="green", bg="black", font=("Courier New", 20))
-    label.pack(pady=20)
+    label.pack(pady=30)
 
     back_button = tk.Button(root, text="Back", fg="green", bg="black", font=("Courier New", 20), command=main_screen)
     back_button.pack(pady=20)
