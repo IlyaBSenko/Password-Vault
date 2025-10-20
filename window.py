@@ -77,7 +77,7 @@ def add_update_screen():
     pwd_entry.pack(pady=(0, 12))
 
     site_entry.bind("<Return>", lambda e: pwd_entry.focus_set())
-    root.bind("<Escape", lambda e: main_screen)
+    root.bind("<Escape>", lambda e: main_screen())
 
     # Result / status
     status = tk.Label(content, text="", fg="lime", bg="black", font=("Courier New", 12))
@@ -172,6 +172,7 @@ def main_screen():
         maximum=100
     )
     progress.pack(pady=15)
+    root.bind("<Escape>", lambda e: root.destroy())
 
 
 hide_timer = {"id": None} # holder to cancel timers
@@ -211,6 +212,8 @@ def vault_screen():
 
     result_label = tk.Label(content, text='', fg="lime", bg="black", font=("Courier New", 12))
     result_label.pack(pady=(0, 10))
+    root.unbind("<Escape>")
+
 
 
     def on_query_enter(event=None):
@@ -283,6 +286,9 @@ def view_passwords():
         font=("Courier New", 12)
     )
 
+    root.unbind("<Escape>")
+
+
 
 
     def check_password(event=None):
@@ -304,7 +310,6 @@ def view_passwords():
     
     
     search_entry.bind("<Return>", check_password)
-    # TODO: esc to quit program
 
     footer = tk.Frame(root, bg="black")
     footer.pack(side='bottom', pady=20, anchor='s')
