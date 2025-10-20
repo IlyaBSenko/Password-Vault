@@ -1,7 +1,6 @@
 import tkinter  as tk
 from tkinter import ttk
 from vault import get_password, set_password, delete_password
-from tkinter import simpledialog
 
 
 # root of the tkinter tree
@@ -48,19 +47,6 @@ def clear_root():
             widget.destroy()
 
 
-def on_add_update():
-        clear_root()
-        site = simpledialog.askstring("Add / Update", "Site name: ")
-        if not site:
-            return
-        
-        pwd = simpledialog.askstring("Add / Update", f"Password for {site}: ") # maybe add show="*"
-
-        if pwd is None:
-            return
-        set_password(site, pwd) # stores in OS keychain
-
-
 
 def add_update_screen():
     clear_root()
@@ -86,9 +72,12 @@ def add_update_screen():
     tk.Label(content, text="Password:",
              fg="green", bg="black", font=("Courier New", 12)).pack(pady=(6, 4))
     pwd_var = tk.StringVar()
-    pwd_entry = tk.Entry(content, textvariable=pwd_var, bg="darkgrey", show="*",
+    pwd_entry = tk.Entry(content, textvariable=pwd_var, bg="darkgrey",
                          width=24, font=("Courier New", 14))
     pwd_entry.pack(pady=(0, 12))
+
+    site_entry.bind("<Return>", lambda e: pwd_entry.focus_set())
+    root.bind("<Escape", lambda e: main_screen)
 
     # Result / status
     status = tk.Label(content, text="", fg="lime", bg="black", font=("Courier New", 12))
@@ -315,7 +304,7 @@ def view_passwords():
     
     
     search_entry.bind("<Return>", check_password)
-
+    # TODO: esc to quit program
 
     footer = tk.Frame(root, bg="black")
     footer.pack(side='bottom', pady=20, anchor='s')
