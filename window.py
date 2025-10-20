@@ -103,6 +103,43 @@ def main_screen():
     progress.pack(pady=15)
 
 
+def vault_screen():
+    clear_root()
+    root.title("The Vault")
+
+    label = tk.Label(
+        root,
+        text="Saved Passwords",
+        fg="green",
+        bg="black",
+        font=("Courier New", 20)
+    )
+    label.pack(pady=(30, 10))
+
+    content = tk.Frame(root, bg="black")
+    content.pack(fill='both', expand=True)
+
+    enter_website = ("Courier New", 12)
+    enter_website = tk.Label(
+        content,
+        text="Which password do you need?",
+        fg="green",
+        bg="black",
+        font=enter_website
+    )
+    enter_website.pack(pady=(40, 10))
+
+    search_var = tk.StringVar()
+    search_entry = tk.Entry(content, textvariable=search_var, bg="darkgrey", width=20, show="*", font=("Courier New", 14))
+    search_entry.pack(pady=(25, 50))
+
+    footer = tk.Frame(root, bg="black")
+    footer.pack(side='bottom', pady=20, anchor='s')
+
+    back_button = tk.Button(footer, text="Back", fg="green", bg="black", height=2, width=3, font=("Courier New", 10), command=main_screen)
+    back_button.pack()
+
+
 
 # view passwords when button is pressed
 def view_passwords():
@@ -132,14 +169,48 @@ def view_passwords():
     enter_pw.pack(pady=(40, 10))
 
     search_var = tk.StringVar()
-    search_entry = tk.Entry(content, textvariable=search_var, bg="grey", width=20, show="*", font=("Courier New", 14))
+    search_entry = tk.Entry(content, textvariable=search_var, bg="darkgrey", width=20, show="*", font=("Courier New", 14))
     search_entry.pack(pady=(25, 50))
+    search_entry.focus_set()
+
+    error_label = tk.Label(
+        content,
+        text="",             
+        fg="red",
+        bg="black",
+        font=("Courier New", 12)
+    )
+
+
+    hide_timer = {"id": None} # holder to cancel timers
+
+
+    def check_password(event=None):
+        if hide_timer["id"] is not None:
+            root.after_cancel(hide_timer["id"])
+            hide_timer["id"] = None
+
+        if search_var.get() == "Place":
+            error_label.pack_forget()
+            vault_screen()
+        else:
+            error_label.config(text="ACCESS DENIED")
+            # show only once (if not already packed)
+            if not error_label.winfo_ismapped():
+                error_label.pack(pady=(0, 5))
+            # auto-hide after 1500ms (optional)
+            hide_timer["id"] = root.after(1500, lambda: error_label.pack_forget())
+    
+    search_entry.bind("<Return>", check_password)
 
     footer = tk.Frame(root, bg="black")
     footer.pack(side='bottom', pady=20, anchor='s')
 
-    back_button = tk.Button(footer, text="Back", fg="green", bg="black", height=2, width=3, font=("Courier New", 10), command=main_screen)
+    back_button = tk.Button(footer, text="Back To Menu", fg="green", bg="black", height=2, width=15, font=("Courier New", 10), command=main_screen)
     back_button.pack()
+
+
+
 
 
 
