@@ -109,11 +109,37 @@ def view_passwords():
     clear_root()
     root.title("View Passwords")
 
-    label = tk.Label(root, text="Saved Passwords", fg="green", bg="black", font=("Courier New", 20))
-    label.pack(pady=30)
+    label = tk.Label(
+         root, 
+         text="Saved Passwords", 
+         fg="green", 
+         bg="black", 
+         font=("Courier New", 20)
+    )
+    label.pack(pady=(30, 10))
 
-    back_button = tk.Button(root, text="Back", fg="green", bg="black", font=("Courier New", 20), command=main_screen)
-    back_button.pack(pady=20)
+    content = tk.Frame(root, bg="black")
+    content.pack(fill='both', expand=True)
+
+    enter_pw = ("Courier New", 12)
+    enter_pw = tk.Label(
+         content, 
+         text="Enter Ultra-Secure-Password to enter The Vault",
+         fg="green",
+         bg="black",
+         font=enter_pw
+    )
+    enter_pw.pack(pady=(40, 10))
+
+    search_var = tk.StringVar()
+    search_entry = tk.Entry(content, textvariable=search_var, bg="grey", width=20, show="*", font=("Courier New", 14))
+    search_entry.pack(pady=(25, 50))
+
+    footer = tk.Frame(root, bg="black")
+    footer.pack(side='bottom', pady=20, anchor='s')
+
+    back_button = tk.Button(footer, text="Back", fg="green", bg="black", height=2, width=3, font=("Courier New", 10), command=main_screen)
+    back_button.pack()
 
 
 
