@@ -21,15 +21,10 @@ progress = ttk.Progressbar(
 progress.pack(pady=55)
 
 
-def start_progress():
-    progress.start()
-
-    for i in range(101):
-        # for 'estheticz'
-        time.sleep(0.015)
+def start_progress(i=0): # doesnt freeze window when you start progress
+    if i <= 100:
         progress['value'] = i
-        root.update_idletasks()
-    progress.stop()
+        root.after(15, start_progress, i + 1)
 
 
 # progress bar style ???
