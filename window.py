@@ -24,6 +24,20 @@ title_label = tk.Label(
 title_label.pack(pady=20)
 
 
+# view passwords when button is pressed
+def view_passwords():
+    for widget in root.winfo_children():
+        widget.destroy()
+
+    root.title("View Passwords")
+
+    label = tk.Label(root, text="Saved Passwords", fg="green", bg="black", font=("Courier New", 20))
+    label.pack(pady=20)
+
+    back_button = tk.Button(root, text="Back", fg="green", bg="black", font=("Courier New", 20))
+    back_button.pack(pady=20)
+
+
 # progressbar widget
 progress = ttk.Progressbar(
     root, 
@@ -61,7 +75,7 @@ view_pw = tk.Button(
     text="View Passwords", 
     fg="darkgreen",
     bg="black",
-    command=start_progress,
+    command=open_new_window,
 )
 view_pw.pack(side="left", padx=55, pady=35)
 
