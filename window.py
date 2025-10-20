@@ -28,6 +28,7 @@ style.configure(
 progress = None
 
 
+# progress bar animation
 def start_progress(i=0): # doesnt freeze window when you start progress
     if not isinstance(progress, ttk.Progressbar) or not progress.winfo_exists():
         return
@@ -42,9 +43,11 @@ def start_progress(i=0): # doesnt freeze window when you start progress
     
 
 
+# clear window
 def clear_root():
     for widget in root.winfo_children():
             widget.destroy()
+
 
 
 # remake main window when back button is pressed
