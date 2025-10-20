@@ -85,6 +85,7 @@ def add_update_screen():
 
     def save_password(event=None):
         site_raw = site_var.get().strip()
+        site_key = site_raw.lower()
         if not site_raw:
             status.config(text="Please enter a website name", fg="yellow")
             return
@@ -94,7 +95,7 @@ def add_update_screen():
             return
 
         # store (your vault.set_password normalizes lower/strip already; if not, do site_raw.lower())
-        set_password(site_raw, pwd)
+        set_password(site_key, pwd)
         status.config(text=f"Saved password for {site_raw}", fg="lime")
         # Optional: clear fields or return to main
         # site_var.set(""); pwd_var.set("")
