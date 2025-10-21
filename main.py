@@ -216,7 +216,7 @@ def high_sec():
     items = [
         ("Complex",                lambda: show_generated_screen("Complex",                back_to=high_sec)),
         ("No Words/Patterns",      lambda: show_generated_screen("No Words/Patterns",      back_to=high_sec)),
-        ("No Repeated Characters", lambda: show_generated_screen("No Repeated Characters", back_to=high_sec)),
+        ("No Repeat Chars", lambda: show_generated_screen("No Repeated Characters", back_to=high_sec)),
     ]
     render_category_screen("High Security Types", items)
 
