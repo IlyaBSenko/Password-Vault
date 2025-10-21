@@ -17,9 +17,9 @@ all_chars = letters_only + nums_only + special_only
 # cool words because they are cool
 words = [
     # Power vibes
-    "Titan", "Vortex", "Phantom", "Inferno", "Blaze", "Shadow",
-    "Specter", "Voltage", "Tempest", "Guardian", "Sentinel",
-    "Spectral", "Apex", "Pulse", "Surge", "Nova", "Rogue",
+    "Awesome", "Titan", "Vortex", "Phantom", "Inferno", "Blaze", 
+    "Shadow", "Specter", "Voltage", "Tempest", "Guardian", 
+    "Sentinel", "Spectral", "Apex", "Pulse", "Surge", "Nova", "Rogue",
     "Blitz", "Reactor", "Havoc", "Spectra", "Echo", "Mirage",
     "Radiant", "Nebula", "Obsidian", "Onyx", "Crimson", "Vigil",
     "Valor", "Super", "Falcon", "Raven", "Jaguar", "Cobalt",
@@ -93,7 +93,13 @@ def generate_password(kind: str, length: int | None = None) -> str:
         return base + tail_nums + tail_special
 
     elif kind == "Mixed Case Letters":
-        return _rand_from(upper_lower, 15)
+        word = choice(words)
+        first_char = word[0].upper()
+        last_char = word[-1].upper()
+        comp = first_char + word[1:-1] + last_char
+        start_idx = choice(range(len(nums_only) - 2))
+        tail_nums = nums_only[start_idx:start_idx + 3]
+        return comp + tail_nums
 
     elif kind == "Length Based":
         if not isinstance(length, int) or length < 6:
