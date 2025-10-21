@@ -27,6 +27,8 @@ style.configure(
 progress = None
 
 
+
+
 def generate_screen():
     clear_root()
     root.title("Security Types")
@@ -86,6 +88,8 @@ def generate_screen():
     back_button.pack()
 
 
+
+
 def low_sec():
     clear_root()
     root.title("Low Security Types")
@@ -141,6 +145,8 @@ def low_sec():
     back_button.pack()
 
 
+
+
 def letters_only():
     clear_root()
     root.title("Letters Only")
@@ -186,6 +192,7 @@ def letters_only():
 
 
 
+
 # progress bar animation
 def start_progress(i=0): # doesn't freeze window when you start progress
     if not isinstance(progress, ttk.Progressbar) or not progress.winfo_exists():
@@ -201,10 +208,12 @@ def start_progress(i=0): # doesn't freeze window when you start progress
     
 
 
+
 # clear window
 def clear_root():
     for widget in root.winfo_children():
             widget.destroy()
+
 
 
 
@@ -243,6 +252,8 @@ def add_update_screen():
     status = tk.Label(content, text="", fg="lime", bg="black", font=("Courier New", 12))
     status.pack(pady=(6, 8))
 
+
+
     def save_password(event=None):
         site_raw = site_var.get().strip()
         site_key = site_raw.lower()
@@ -261,8 +272,10 @@ def add_update_screen():
         # site_var.set(""); pwd_var.set("")
         # main_screen()
 
+
     # Bind Enter on the password field to save
     pwd_entry.bind("<Return>", save_password)
+
 
     # Buttons row
     btn_row = tk.Frame(root, bg="black")
@@ -273,8 +286,6 @@ def add_update_screen():
 
     tk.Button(btn_row, text="Back To Menu", fg="green", bg="black",
               width=15, command=main_screen).pack(side="left", padx=10)
-
-
 
 
 
@@ -339,7 +350,6 @@ def main_screen():
 
 
 hide_timer = {"id": None} # holder to cancel timers
-
 
 
 
@@ -412,7 +422,6 @@ def vault_screen():
 
 
 
-
 # view passwords when button is pressed
 def view_passwords():
     clear_root()
@@ -478,6 +487,7 @@ def view_passwords():
     
     search_entry.bind("<Return>", check_password)
 
+    
     footer = tk.Frame(root, bg="black")
     footer.pack(side='bottom', pady=20, anchor='s')
 
