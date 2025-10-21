@@ -14,6 +14,40 @@ all_chars = letters_only + nums_only + special_only
 
 
 
+# cool words because they are cool
+words = [
+    # Power vibes
+    "Titan", "Vortex", "Phantom", "Inferno", "Blaze", "Shadow",
+    "Specter", "Voltage", "Tempest", "Guardian", "Sentinel",
+    "Spectral", "Apex", "Pulse", "Surge", "Nova", "Rogue",
+    "Blitz", "Reactor", "Havoc", "Spectra", "Echo", "Mirage",
+    "Radiant", "Nebula", "Obsidian", "Onyx", "Crimson", "Vigil",
+    "Valor", "Super", "Falcon", "Raven", "Jaguar", "Cobalt",
+
+    # Elements & Nature vibes
+    "Storm", "Frost", "Ember", "Emberlight", "Tornado", "Cyclone",
+    "Hurricane", "Avalanche", "Solar", "Lunar", "Eclipse",
+    "Comet", "Meteor", "Quasar", "Plasma", "Atom", "Ion",
+    "Glacier", "Infernal", "Terra", "Aether", "Zephyr",
+
+    # Technology & Energy vibes
+    "Quantum", "Neon", "Circuit", "Cipher", "Fusion", "Gamma",
+    "Omega", "Sigma", "Delta", "Vector", "Volt", "Core",
+    "Mach", "Proto", "Nano", "Cyber", "Zero", "EchoCore",
+
+    # Mythic & Heroic vibes
+    "Apollo", "Orion", "Valkyrie", "Artemis", "Achilles", "Prometheus",
+    "Hercules", "Spartan", "Phoenix", "Draco", "Chronos", "Ares",
+    "Helios", "Nyx", "Zeus", "Raiden", "Odin", "Erebus", "Atlas",
+
+    # Mysterious and Stealth vibes
+    "Silent", "Stealth", "Shade", "Wraith", "Cipher", "PhantomX",
+    "Reaper", "Specter", "EchoShadow", "Nightfall", "Void",
+    "Oblivion", "Abyss", "Drift", "Vanish", "Fade", "Darklight"
+]
+
+
+
 basic_types = ["Letters Only", "Alphanumeric"]
 intermediate_types = ["Alphanumeric + Special", "Mixed Case Letters", "Length Based"]
 advanced_types = ["Complex", "No Words/Patterns", "No Repeated Characters"]
@@ -41,7 +75,10 @@ def generate_password(kind: str, length: int | None = None) -> str:
     kind = (kind or "").strip()
 
     if kind == "Letters Only":
-        return _rand_from(letters_only, 15)
+        base = choice(words).lower()
+        start_idx = choice(range(len(ascii_lowercase) - 2))
+        tail = ascii_lowercase[start_idx:start_idx + 3]
+        return base + tail
 
     elif kind == "Alphanumeric":
         return _rand_from(chars_and_nums, 15)
