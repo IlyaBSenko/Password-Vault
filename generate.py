@@ -67,6 +67,8 @@ def _rand_from(pool: str, n: int) -> str:
 
 
 
+base = choice(words).lower() # for words
+
 def generate_password(kind: str, length: int | None = None) -> str:
     """
     Return a password string based on kind.
@@ -75,16 +77,20 @@ def generate_password(kind: str, length: int | None = None) -> str:
     kind = (kind or "").strip()
 
     if kind == "Letters Only":
-        base = choice(words).lower()
         start_idx = choice(range(len(ascii_lowercase) - 2))
         tail = ascii_lowercase[start_idx:start_idx + 3]
         return base + tail
 
     elif kind == "Alphanumeric":
-        return _rand_from(chars_and_nums, 15)
+        start_idx = choice(range(len(nums_only) - 2))
+        tail = nums_only[start_idx:start_idx + 3]
+        return base + tail
 
     elif kind == "Alphanumeric + Special":
-        return _rand_from(all_chars, 15)
+        start_idx = choice(range(len(nums_only) - 2))
+        tail_nums = nums_only[start_idx:start_idx + 3]
+        tail_special = _rand_from(special_only, 3)
+        return base + tail_nums + tail_special
 
     elif kind == "Mixed Case Letters":
         return _rand_from(upper_lower, 15)
