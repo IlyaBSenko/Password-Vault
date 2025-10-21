@@ -68,6 +68,8 @@ def _rand_from(pool: str, n: int) -> str:
 
 
 base = choice(words).lower() # for words
+tail_special = _rand_from(special_only, 3) # rand 3 chars from special
+
 
 def generate_password(kind: str, length: int | None = None) -> str:
     """
@@ -89,17 +91,16 @@ def generate_password(kind: str, length: int | None = None) -> str:
     elif kind == "Alphanumeric + Special":
         start_idx = choice(range(len(nums_only) - 2))
         tail_nums = nums_only[start_idx:start_idx + 3]
-        tail_special = _rand_from(special_only, 3)
         return base + tail_nums + tail_special
 
     elif kind == "Mixed Case Letters":
         word = choice(words)
         first_char = word[0].upper()
         last_char = word[-1].upper()
-        comp = first_char + word[1:-1] + last_char
+        complete = first_char + word[1:-1] + last_char
         start_idx = choice(range(len(nums_only) - 2))
         tail_nums = nums_only[start_idx:start_idx + 3]
-        return comp + tail_nums
+        return complete + tail_nums + tail_special
 
     elif kind == "Length Based":
         if not isinstance(length, int) or length < 6:
@@ -107,10 +108,10 @@ def generate_password(kind: str, length: int | None = None) -> str:
         return _rand_from(all_chars_cases, length)
 
     elif kind == "Complex":
-        return _rand_from(all_chars_cases, 25)
+        return _rand_from(all_chars_cases, 35)
 
     elif kind == "No Words/Patterns":
-        # Placeholder 
+        # same as complex but less chars 
         return _rand_from(all_chars_cases, 20)
 
     elif kind == "No Repeated Characters":
