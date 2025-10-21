@@ -1,3 +1,4 @@
+# keyring-based password storage
 import keyring
 
 SERVICE = "Vault"
