@@ -4,168 +4,143 @@ from vault import get_password, set_password, delete_password
 from generate import generate_password
 
 
+BG        = "black"
+FG_GREEN  = "green"
+FG_DGREEN = "darkgreen"
+FG_LIME   = "lime"
+FG_WARN   = "yellow"
+FG_ERR    = "red"
+
+TITLE_FONT = ("Courier New", 28)
+H1_FONT    = ("Courier New", 20)
+TEXT_FONT  = ("Courier New", 18)
+SMALL_FONT = ("Courier New", 12)
+
+
+# hiding error messages
+hide_timer = {"id": None}
+
+
+
 root = tk.Tk()
 root.title("Password Generator")
 root.geometry("500x500")
-root.configure(bg="black")
-
+root.configure(bg=BG)
 
 style = ttk.Style()
 style.theme_use("clam")
 style.configure(
     "DarkGreen.Horizontal.TProgressbar",
     background="#006400",
-    troughcolor="black",
-    bordercolor="black",
+    troughcolor=BG,
+    bordercolor=BG,
     lightcolor="#006400",
     darkcolor="#006400",
 )
 
 
-progress = None
-hide_timer = {"id": None}  
 
-
-
+# =========================
+# Utilities / Widgets
+# =========================
 def clear_root():
-    for widget in root.winfo_children():
-        widget.destroy()
+    for w in root.winfo_children():
+        w.destroy()
+
+
+def make_label(parent, text, font=TEXT_FONT, fg=FG_GREEN):
+    return tk.Label(parent, text=text, fg=fg, bg=BG, font=font)
+
+
+def make_button(parent, text, cmd, width=15, height=2, fg=FG_DGREEN):
+    return tk.Button(parent, text=text, fg=fg, bg=BG, width=width, height=height, command=cmd)
+
+
+def make_progress(parent):
+    return ttk.Progressbar(
+        parent,
+        style="DarkGreen.Horizontal.TProgressbar",
+        orient="horizontal",
+        length=300,
+        mode="determinate",
+        maximum=100,
+    )
 
 
 
 def start_progress(bar: ttk.Progressbar, i: int = 0, on_done=None):
+    """Animate a specific progressbar; call on_done() when finished."""
     if bar is None or not bar.winfo_exists():
         return
-
     if i <= 100:
         bar["value"] = i
         root.after(15, start_progress, bar, i + 1, on_done)
-
     else:
         if callable(on_done):
             on_done()
 
 
 
-# display helpers
-def show_generated(kind: str):
+# =========================
+# Generator screens
+# =========================
+def show_generated_screen(kind: str, length: int | None = None, back_to=None):
+    """
+    Unified 'generate -> animate -> reveal' screen.
+    If length is provided, it's passed to generate_password.
+    If back_to is provided, a 'Back' button returns to that screen.
+    """
     clear_root()
-    root.title(kind)
+    title = kind if length is None else f"{kind} ({length})"
+    root.title(title)
 
-    tk.Label(root, text=kind, fg="green", bg="black",
-             font=("Courier New", 28)).pack(pady=(30, 10))
+    make_label(root, title, TITLE_FONT).pack(pady=(30, 10))
 
-    status = tk.Label(root, text="Generating Password...", fg="lime",
-                      bg="black", font=("Courier New", 18))
+    status = make_label(root, "Generating Password...", TEXT_FONT, FG_LIME)
     status.pack(pady=(10, 10))
 
-    bar = ttk.Progressbar(
-        root,
-        style="DarkGreen.Horizontal.TProgressbar",
-        orient="horizontal",
-        length=300,
-        mode="determinate",
-        maximum=100,
-    )
-    bar.pack(pady=(5, 20))
-
-    
-    try:
-        password = generate_password(kind)
-    except Exception as e:
-        password = f"Error: {e}"
-
-    pw_label = tk.Label(root, text="", fg="lime", bg="black",
-                        font=("Courier New", 18))
-    pw_label.pack(pady=(10, 10))
-
-    def reveal():
-        bar.pack_forget()
-        status.config(text="Generated Password:")
-        pw_label.config(text=password)
-
-    
-    start_progress(bar, 0, on_done=reveal)
-
-    tk.Button(root, text="Back", fg="green", bg="black",
-              height=2, width=15, font=("Courier New", 10),
-              command=generate_screen).pack(pady=(10, 0))
-
-    tk.Button(root, text="Back To Menu", fg="green", bg="black",
-              height=2, width=15, font=("Courier New", 10),
-              command=main_screen).pack(pady=(20, 0))
-
-
-
-
-# for length based passwords
-def show_generated_with_length(kind: str, length: int):
-    clear_root()
-    root.title(f"{kind} ({length})")
-
-    tk.Label(root, text=f"{kind}", fg="green", bg="black",
-             font=("Courier New", 28)).pack(pady=(30, 10))
-
-    status = tk.Label(root, text="Generating Password...", fg="lime",
-                      bg="black", font=("Courier New", 18))
-    status.pack(pady=(10, 10))
-
-    bar = ttk.Progressbar(
-        root,
-        style="DarkGreen.Horizontal.TProgressbar",
-        orient="horizontal",
-        length=300,
-        mode="determinate",
-        maximum=100,
-    )
+    bar = make_progress(root)
     bar.pack(pady=(5, 20))
 
     try:
-        password = generate_password(kind, length=length)
+        pw = generate_password(kind, length=length)
     except Exception as e:
-        password = f"Error: {e}"
+        pw = f"Error: {e}"
 
-    pw_label = tk.Label(root, text="", fg="lime", bg="black",
-                        font=("Courier New", 18))
+    pw_label = make_label(root, "", TEXT_FONT, FG_LIME)
     pw_label.pack(pady=(10, 10))
 
     def reveal():
-        bar.pack_forget()
+        bar.pack_forget()  # hide the bar when done
         status.config(text="Generated Password:")
-        pw_label.config(text=password)
+        pw_label.config(text=pw)
 
     start_progress(bar, 0, on_done=reveal)
 
-    tk.Button(root, text="Back", fg="green", bg="black",
-              height=2, width=15, font=("Courier New", 10),
-              command=generate_screen).pack(pady=(10, 0))
-
-    tk.Button(root, text="Back", fg="green", bg="black",
-              height=2, width=15, font=("Courier New", 10),
-              command=length_based_screen).pack(pady=(20, 0))
-
+    if back_to:
+        make_button(root, "Back", back_to, width=15, height=2, fg=FG_GREEN).pack(pady=(10, 0))
+    make_button(root, "Back To Menu", main_screen, width=15, height=2, fg=FG_GREEN).pack(pady=(20, 0))
 
 
 
 def length_based_screen():
+    """Prompt for the length, then call the unified generator screen."""
     clear_root()
     root.title("Length Based")
 
-    tk.Label(root, text="Length Based", fg="green", bg="black",
-             font=("Courier New", 24)).pack(pady=(30, 10))
-
-    tk.Label(root, text="Choose a length (≥ 6):", fg="darkgreen", bg="black",
-             font=("Courier New", 14)).pack(pady=(10, 5))
+    make_label(root, "Length Based", ("Courier New", 24)).pack(pady=(30, 10))
+    make_label(root, "Choose a length (≥ 6):", ("Courier New", 14), FG_DGREEN).pack(pady=(10, 5))
 
     length_var = tk.StringVar(value="12")
-    length_entry = tk.Entry(root, textvariable=length_var, bg="darkgrey",
-                            width=8, font=("Courier New", 16), justify="center")
-    length_entry.pack(pady=(0, 10))
-    length_entry.focus_set()
+    entry = tk.Entry(root, textvariable=length_var, bg="darkgrey",
+                     width=8, font=("Courier New", 16), justify="center")
+    entry.pack(pady=(0, 10))
+    entry.focus_set()
 
-    status = tk.Label(root, text="", fg="yellow", bg="black",
-                      font=("Courier New", 12))
+    status = make_label(root, "", SMALL_FONT, FG_WARN)
     status.pack(pady=(6, 6))
+
+
 
     def go(event=None):
         s = length_var.get().strip()
@@ -176,212 +151,128 @@ def length_based_screen():
         if n < 6:
             status.config(text="Length must be ≥ 6.")
             return
-        show_generated_with_length("Length Based", n)
+        show_generated_screen("Length Based", length=n, back_to=length_based_screen)
 
-    tk.Button(root, text="Generate", fg="darkgreen", bg="black",
-              width=12, command=go).pack(pady=(6, 6))
+    make_button(root, "Generate", go, width=12, height=1).pack(pady=(6, 6))
+    make_button(root, "Back", generate_screen, width=12, height=1, fg=FG_GREEN).pack(pady=(0, 12))
 
-    tk.Button(root, text="Back", fg="green", bg="black",
-              width=12, command=generate_screen).pack(pady=(0, 12))
-
-    length_entry.bind("<Return>", go)
+    entry.bind("<Return>", go)
 
 
 
-def letters_only():
-    show_generated("Letters Only")
-
-
-def alphanumeric():
-    show_generated("Alphanumeric")
-
-
-def Alpha_special():
-    show_generated("Alphanumeric + Special")
-
-
-def mixed_case_letters():
-    show_generated("Mixed Case Letters")
-
-
-def complex():
-    show_generated("Complex")
-
-
-def no_words_patterns():
-    show_generated("No Words/Patterns")
-
-
-def no_rep_chars():
-    show_generated("No Repeated Characters")
-
-
-
-# security types
-def low_sec():
+# =========================
+# Category screens (Low/Med/High)
+# =========================
+def render_category_screen(title: str, items: list[tuple[str, callable]]):
+    """
+    Generic renderer for a list of (label, command) buttons.
+    items: [("Label", lambda: ...), ...]
+    """
     clear_root()
-    root.title("Low Security Types")
+    root.title(title)
 
-    main_frame = tk.Frame(root, bg="black")
-    main_frame.pack(expand=True, fill="both")
+    main = tk.Frame(root, bg=BG)
+    main.pack(expand=True, fill="both")
 
-    tk.Label(main_frame, text="Low Security Types", bg="black",
-             fg="darkgreen", font=("Courier New", 20)).pack(pady=(50, 15))
+    make_label(main, title, H1_FONT).pack(pady=(50, 15))
+    make_label(main, "Which Option Will You Pick?", H1_FONT).pack(pady=(20, 5))
 
-    tk.Label(main_frame, text="Which Option Will You Pick?", bg="black",
-             fg="darkgreen", font=("Courier New", 20)).pack(pady=(20, 5))
-
-    button_section = tk.Frame(main_frame, bg="black")
+    button_section = tk.Frame(main, bg=BG)
     button_section.pack(side="bottom", pady=30, anchor="s")
 
-    top_buttons = tk.Frame(button_section, bg="black")
-    top_buttons.pack(pady=(0, 8))
+    # Lay out buttons in rows of 2
+    row = tk.Frame(button_section, bg=BG)
+    row.pack(pady=(0, 8))
+    for i, (label, cmd) in enumerate(items, start=1):
+        make_button(row, label, cmd).pack(side="left", padx=12)
+        if i % 2 == 0 and i != len(items):
+            row = tk.Frame(button_section, bg=BG)
+            row.pack(pady=(0, 8))
 
-    tk.Button(top_buttons, text="Letters Only", fg="darkgreen", bg="black",
-              width=15, height=2, command=letters_only).pack(side="left", padx=20)
-
-    tk.Button(top_buttons, text="Alphanumeric", fg="darkgreen", bg="black",
-              width=15, height=2, command=alphanumeric).pack(side="right", padx=20)
-
-    footer = tk.Frame(root, bg="black")
+    footer = tk.Frame(root, bg=BG)
     footer.pack(side="bottom", pady=25, anchor="s")
+    make_button(footer, "Back", generate_screen, width=15, height=2, fg=FG_GREEN).pack()
 
-    tk.Button(footer, text="Back", fg="green", bg="black",
-              height=2, width=15, font=("Courier New", 10),
-              command=generate_screen).pack()
 
+
+def low_sec():
+    items = [
+        ("Letters Only",  lambda: show_generated_screen("Letters Only",  back_to=low_sec)),
+        ("Alphanumeric",  lambda: show_generated_screen("Alphanumeric",  back_to=low_sec)),
+    ]
+    render_category_screen("Low Security Types", items)
 
 
 def med_sec():
-    clear_root()
-    root.title("Medium Security Types")
-
-    main_frame = tk.Frame(root, bg="black")
-    main_frame.pack(expand=True, fill="both")
-
-    tk.Label(main_frame, text="Medium Security Types", bg="black",
-             fg="darkgreen", font=("Courier New", 20)).pack(pady=(50, 15))
-
-    tk.Label(main_frame, text="Which Option Will You Pick?", bg="black",
-             fg="darkgreen", font=("Courier New", 20)).pack(pady=(20, 5))
-
-    button_section = tk.Frame(main_frame, bg="black")
-    button_section.pack(side="bottom", pady=30, anchor="s")
-
-    top_row = tk.Frame(button_section, bg="black")
-    top_row.pack(pady=(0, 8))
-
-    tk.Button(top_row, text="Alphanumeric + Special", fg="darkgreen", bg="black",
-              width=20, height=2, command=Alpha_special).pack(side="left", padx=12)
-
-    tk.Button(top_row, text="Mixed Case Letters", fg="darkgreen", bg="black",
-              width=20, height=2, command=mixed_case_letters).pack(side="right", padx=12)
-
-    tk.Button(button_section, text="Length Based", fg="darkgreen", bg="black",
-              width=16, pady=8, command=length_based_screen).pack(pady=(10, 0))
-
-    footer = tk.Frame(root, bg="black")
-    footer.pack(side="bottom", pady=25, anchor="s")
-
-    tk.Button(footer, text="Back", fg="green", bg="black",
-              height=2, width=15, font=("Courier New", 10),
-              command=generate_screen).pack()
-
+    items = [
+        ("Alphanum + Special", lambda: show_generated_screen("Alphanumeric + Special", back_to=med_sec)),
+        ("Mixed Case Letters",     lambda: show_generated_screen("Mixed Case Letters",     back_to=med_sec)),
+        ("Length Based",           length_based_screen),
+    ]
+    render_category_screen("Medium Security Types", items)
 
 
 def high_sec():
-    clear_root()
-    root.title("High Security Types")
-
-    main_frame = tk.Frame(root, bg="black")
-    main_frame.pack(expand=True, fill="both")
-
-    tk.Label(main_frame, text="High Security Types", bg="black",
-             fg="darkgreen", font=("Courier New", 20)).pack(pady=(50, 15))
-
-    tk.Label(main_frame, text="Which Option Will You Pick?", bg="black",
-             fg="darkgreen", font=("Courier New", 20)).pack(pady=(20, 5))
-
-    button_section = tk.Frame(main_frame, bg="black")
-    button_section.pack(side="bottom", pady=30, anchor="s")
-
-    top_row = tk.Frame(button_section, bg="black")
-    top_row.pack(pady=(0, 8))
-
-    tk.Button(top_row, text="Complex", fg="darkgreen", bg="black",
-              width=15, height=2, command=complex).pack(side="left", padx=12)
-
-    tk.Button(top_row, text="No Words/Patterns", fg="darkgreen", bg="black",
-              width=20, height=2, command=no_words_patterns).pack(side="right", padx=12)
-
-    tk.Button(button_section, text="No Repeated Characters", fg="darkgreen", bg="black",
-              width=24, pady=8, command=no_rep_chars).pack(pady=(10, 0))
-
-    footer = tk.Frame(root, bg="black")
-    footer.pack(side="bottom", pady=25, anchor="s")
-
-    tk.Button(footer, text="Back", fg="green", bg="black",
-              height=2, width=15, font=("Courier New", 10),
-              command=generate_screen).pack()
+    items = [
+        ("Complex",                lambda: show_generated_screen("Complex",                back_to=high_sec)),
+        ("No Words/Patterns",      lambda: show_generated_screen("No Words/Patterns",      back_to=high_sec)),
+        ("No Repeated Characters", lambda: show_generated_screen("No Repeated Characters", back_to=high_sec)),
+    ]
+    render_category_screen("High Security Types", items)
 
 
 
+# =========================
+# Vault / Add-Update / View
+# =========================
 def add_update_screen():
     clear_root()
     root.title("Add / Update Password")
 
-    tk.Label(root, text="Add / Update Password",
-             fg="green", bg="black", font=("Courier New", 20)).pack(pady=(30, 10))
+    make_label(root, "Add / Update Password", H1_FONT).pack(pady=(30, 10))
 
-    content = tk.Frame(root, bg="black")
+    content = tk.Frame(root, bg=BG)
     content.pack(fill="both", expand=True, padx=20)
 
-    tk.Label(content, text="Website / Service name:",
-             fg="green", bg="black", font=("Courier New", 12)).pack(pady=(10, 4))
+    make_label(content, "Website / Service name:", SMALL_FONT).pack(pady=(10, 4))
     site_var = tk.StringVar()
-    site_entry = tk.Entry(content, textvariable=site_var, bg="darkgrey",
-                          width=24, font=("Courier New", 14))
+    site_entry = tk.Entry(content, textvariable=site_var, bg="darkgrey", width=24, font=("Courier New", 14))
     site_entry.pack(pady=(0, 12))
     site_entry.focus_set()
 
-    tk.Label(content, text="Password:",
-             fg="green", bg="black", font=("Courier New", 12)).pack(pady=(6, 4))
+    make_label(content, "Password:", SMALL_FONT).pack(pady=(6, 4))
     pwd_var = tk.StringVar()
-    pwd_entry = tk.Entry(content, textvariable=pwd_var, bg="darkgrey",
-                         width=24, font=("Courier New", 14), show="*")
+    pwd_entry = tk.Entry(content, textvariable=pwd_var, bg="darkgrey", width=24, font=("Courier New", 14), show="*")
     pwd_entry.pack(pady=(0, 12))
 
     site_entry.bind("<Return>", lambda e: pwd_entry.focus_set())
     root.bind("<Escape>", lambda e: main_screen())
 
-    status = tk.Label(content, text="", fg="lime", bg="black", font=("Courier New", 12))
+    status = make_label(content, "", SMALL_FONT, FG_LIME)
     status.pack(pady=(6, 8))
 
 
-    # save password into OS keychain
+
     def save_password(event=None):
         site_raw = site_var.get().strip()
         site_key = site_raw.lower()
         if not site_raw:
-            status.config(text="Please enter a website name", fg="yellow")
+            status.config(text="Please enter a website name", fg=FG_WARN)
             return
         pwd = pwd_var.get()
         if pwd == "":
-            status.config(text="Please enter a password", fg="yellow")
+            status.config(text="Please enter a password", fg=FG_WARN)
             return
         set_password(site_key, pwd)
-        status.config(text=f"Saved password for {site_raw}", fg="lime")
+        status.config(text=f"Saved password for {site_raw}", fg=FG_LIME)
 
     pwd_entry.bind("<Return>", save_password)
 
-    btn_row = tk.Frame(root, bg="black")
+    btn_row = tk.Frame(root, bg=BG)
     btn_row.pack(side="bottom", pady=20, anchor="s")
 
-    tk.Button(btn_row, text="Save", fg="darkgreen", bg="black",
-              width=12, command=save_password).pack(side="left", padx=10)
-
-    tk.Button(btn_row, text="Back To Menu", fg="green", bg="black",
-              width=15, command=main_screen).pack(side="left", padx=10)
+    make_button(btn_row, "Save", save_password, width=12).pack(side="left", padx=10)
+    make_button(btn_row, "Back To Menu", main_screen, width=15, fg=FG_GREEN).pack(side="left", padx=10)
 
 
 
@@ -389,52 +280,45 @@ def vault_screen():
     clear_root()
     root.title("The Vault")
 
-    tk.Label(root, text="Saved Passwords", fg="green", bg="black",
-             font=("Courier New", 20)).pack(pady=(30, 10))
+    make_label(root, "Saved Passwords", H1_FONT).pack(pady=(30, 10))
 
-    content = tk.Frame(root, bg="black")
+    content = tk.Frame(root, bg=BG)
     content.pack(fill="both", expand=True)
 
-    tk.Label(content, text="Which password do you need?",
-             fg="green", bg="black", font=("Courier New", 12)).pack(pady=(40, 10))
+    make_label(content, "Which password do you need?", SMALL_FONT).pack(pady=(40, 10))
 
     search_var = tk.StringVar()
-    search_entry = tk.Entry(content, textvariable=search_var, bg="darkgrey",
-                            width=20, font=("Courier New", 14))
+    search_entry = tk.Entry(content, textvariable=search_var, bg="darkgrey", width=20, font=("Courier New", 14))
     search_entry.pack(pady=(25, 50))
     search_entry.focus_set()
 
-    result_label = tk.Label(content, text="", fg="lime", bg="black",
-                            font=("Courier New", 12))
+    result_label = make_label(content, "", SMALL_FONT, FG_LIME)
     result_label.pack(pady=(0, 10))
     root.unbind("<Escape>")
 
 
 
-    # look up password for website
     def on_query_enter(event=None):
         site = search_var.get()
         key = site.strip().lower()
         if not key:
-            result_label.config(text="Please enter a website where you have a password", fg="yellow")
+            result_label.config(text="Please enter a website where you have a password", fg=FG_WARN)
             return
         pwd = get_password(key)
         if pwd:
-            result_label.config(text=f"Password for {site}: {pwd}", fg="lime")
+            result_label.config(text=f"Password for {site}: {pwd}", fg=FG_LIME)
             root.clipboard_clear()
             root.clipboard_append(pwd)
             root.update()
         else:
-            result_label.config(text="Password not found for this website", fg="red")
+            result_label.config(text="Password not found for this website", fg=FG_ERR)
 
     search_entry.bind("<Return>", on_query_enter)
 
-    footer = tk.Frame(root, bg="black")
+    footer = tk.Frame(root, bg=BG)
     footer.pack(side="bottom", pady=20, anchor="s")
 
-    tk.Button(footer, text="Back To Menu", fg="green", bg="black",
-              height=2, width=15, font=("Courier New", 10),
-              command=main_screen).pack()
+    make_button(footer, "Back To Menu", main_screen, width=15, fg=FG_GREEN).pack()
 
 
 
@@ -442,34 +326,28 @@ def view_passwords():
     clear_root()
     root.title("View Passwords")
 
-    tk.Label(root, text="Saved Passwords", fg="green", bg="black",
-             font=("Courier New", 20)).pack(pady=(30, 10))
+    make_label(root, "Saved Passwords", H1_FONT).pack(pady=(30, 10))
 
-    content = tk.Frame(root, bg="black")
+    content = tk.Frame(root, bg=BG)
     content.pack(fill="both", expand=True)
 
-    tk.Label(content, text="Enter Ultra-Secure-Password to enter The Vault",
-             fg="green", bg="black", font=("Courier New", 12)).pack(pady=(40, 10))
+    make_label(content, "Enter Ultra-Secure-Password to enter The Vault", SMALL_FONT).pack(pady=(40, 10))
 
     search_var = tk.StringVar()
-    search_entry = tk.Entry(content, textvariable=search_var, bg="darkgrey",
-                            width=20, show="*", font=("Courier New", 14))
+    search_entry = tk.Entry(content, textvariable=search_var, bg="darkgrey", width=20, show="*", font=("Courier New", 14))
     search_entry.pack(pady=(25, 50))
     search_entry.focus_set()
 
-    error_label = tk.Label(content, text="", fg="red", bg="black",
-                           font=("Courier New", 12))
+    error_label = make_label(content, "", SMALL_FONT, FG_ERR)
 
     root.unbind("<Escape>")
-
-
 
     def check_password(event=None):
         if hide_timer["id"] is not None:
             root.after_cancel(hide_timer["id"])
             hide_timer["id"] = None
 
-        if search_var.get() == "Place": # Playboi Carti - Place (Prod. Pi'erre)
+        if search_var.get() == "Place":  # Playboi Carti - Place (Prod. Pi'erre) listen to this song if your reading this, trust
             error_label.pack_forget()
             vault_screen()
         else:
@@ -478,95 +356,66 @@ def view_passwords():
                 error_label.pack(pady=(0, 5))
             hide_timer["id"] = root.after(1500, lambda: error_label.pack_forget())
 
-
     search_entry.bind("<Return>", check_password)
 
-    footer = tk.Frame(root, bg="black")
+    footer = tk.Frame(root, bg=BG)
     footer.pack(side="bottom", pady=20, anchor="s")
 
-    tk.Button(footer, text="Back To Menu", fg="green", bg="black",
-              height=2, width=15, font=("Courier New", 10),
-              command=main_screen).pack()
+    make_button(footer, "Back To Menu", main_screen, width=15, fg=FG_GREEN).pack()
 
 
 
+# =========================
+# Generate / Main menus
+# =========================
 def generate_screen():
     clear_root()
     root.title("Security Types")
 
-    main_frame = tk.Frame(root, bg="black")
-    main_frame.pack(expand=True, fill="both")
+    main = tk.Frame(root, bg=BG)
+    main.pack(expand=True, fill="both")
 
-    tk.Label(main_frame, text="What Security Type", bg="black",
-             fg="darkgreen", font=("Courier New", 20)).pack(pady=(50, 15))
+    make_label(main, "What Security Type", H1_FONT, FG_DGREEN).pack(pady=(50, 15))
+    make_label(main, "Would You Like?", H1_FONT, FG_DGREEN).pack(pady=(20, 5))
 
-    tk.Label(main_frame, text="Would You Like?", bg="black",
-             fg="darkgreen", font=("Courier New", 20)).pack(pady=(20, 5))
-
-    button_section = tk.Frame(main_frame, bg="black")
+    button_section = tk.Frame(main, bg=BG)
     button_section.pack(side="bottom", pady=30, anchor="s")
 
-    top_buttons = tk.Frame(button_section, bg="black")
-    top_buttons.pack(pady=(0, 8))
+    top = tk.Frame(button_section, bg=BG)
+    top.pack(pady=(0, 8))
 
-    tk.Button(top_buttons, text="Low Security", fg="darkgreen", bg="black",
-              width=15, height=2, command=low_sec).pack(side="left", padx=20)
+    make_button(top, "Low Security", low_sec).pack(side="left", padx=20)
+    make_button(top, "Medium Security", med_sec).pack(side="right", padx=20)
 
-    tk.Button(top_buttons, text="Medium Security", fg="darkgreen", bg="black",
-              width=15, height=2, command=med_sec).pack(side="right", padx=20)
+    make_button(button_section, "High Security", high_sec, width=12, height=2).pack(pady=(10, 0))
 
-    tk.Button(button_section, text="High Security", fg="darkgreen", bg="black",
-              width=12, pady=10, command=high_sec).pack(pady=(10, 0))
-
-    footer = tk.Frame(root, bg="black")
+    footer = tk.Frame(root, bg=BG)
     footer.pack(side="bottom", pady=25, anchor="s")
 
-    tk.Button(footer, text="Back To Menu", fg="green", bg="black",
-              height=2, width=15, font=("Courier New", 10),
-              command=main_screen).pack()
+    make_button(footer, "Back To Menu", main_screen, width=15, fg=FG_GREEN).pack()
 
 
 
 def main_screen():
-    global progress
     clear_root()
-
     root.title("Password Generator")
 
-    title_font = ("Courier New", 30)
-    prompt_font = ("Courier New", 18)
+    make_label(root, "PassWord Generator", ("Courier New", 30)).pack(pady=20)
+    make_label(root, "What would you like to do?", ("Courier New", 18)).pack(pady=30)
 
-    tk.Label(root, text="PassWord Generator", fg="green",
-             bg="black", font=title_font).pack(pady=20)
-
-    tk.Label(root, text="What would you like to do?", fg="green",
-             bg="black", font=prompt_font).pack(pady=30)
-
-    button_section = tk.Frame(root, bg="black")
+    button_section = tk.Frame(root, bg=BG)
     button_section.pack(side="bottom", pady=120, anchor="s")
 
-    top_buttons = tk.Frame(button_section, bg="black")
-    top_buttons.pack(pady=(0, 10))
+    top = tk.Frame(button_section, bg=BG)
+    top.pack(pady=(0, 10))
 
-    tk.Button(top_buttons, text="View Passwords", fg="darkgreen", bg="black",
-              width=15, height=2, command=view_passwords).pack(side="left", padx=20)
+    make_button(top, "View Passwords", view_passwords).pack(side="left", padx=20)
+    make_button(top, "Generate Password", generate_screen).pack(side="right", padx=20)
 
-    tk.Button(top_buttons, text="Generate Password", fg="darkgreen", bg="black",
-              width=15, height=2, command=generate_screen).pack(side="right", padx=20)
+    make_button(button_section, "Add / Update Website or Password", add_update_screen,
+                width=30, height=3).pack(pady=(.5, 0))
 
-    tk.Button(button_section, text="Add / Update Website or Password", fg="darkgreen",
-              bg="black", width=30, pady=55, command=add_update_screen).pack(pady=(.5, 0))
-
-    progress = ttk.Progressbar(
-        root,
-        style="DarkGreen.Horizontal.TProgressbar",
-        orient="horizontal",
-        length=300,
-        mode="determinate",
-        maximum=100,
-    )
-    progress.pack(pady=15)
-    root.bind("<Escape>", lambda e: root.destroy())
+   
 
 
 
