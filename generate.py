@@ -61,11 +61,10 @@ def generate_password(kind: str, length: int | None = None) -> str:
         return _rand_from(all_chars_cases, 25)
 
     elif kind == "No Words/Patterns":
-        # Placeholder still just random strong mix
+        # Placeholder 
         return _rand_from(all_chars_cases, 20)
 
     elif kind == "No Repeated Characters":
-        # Allow up to unique pool size, otherwise fall back to allowing repeats
         target = 20
         unique_pool = list(dict.fromkeys(all_chars_cases))
         if target <= len(unique_pool):

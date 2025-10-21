@@ -24,7 +24,7 @@ hide_timer = {"id": None}
 
 root = tk.Tk()
 root.title("Password Generator")
-root.geometry("500x500")
+root.geometry("600x600")
 root.configure(bg=BG)
 
 style = ttk.Style()
@@ -398,9 +398,9 @@ def generate_screen():
 
 def main_screen():
     clear_root()
-    root.title("Password Generator")
+    root.title("Password Vault")
 
-    make_label(root, "PassWord Generator", ("Courier New", 30)).pack(pady=20)
+    make_label(root, "PassWord Vault", ("Courier New", 30)).pack(pady=20)
     make_label(root, "What would you like to do?", ("Courier New", 18)).pack(pady=30)
 
     button_section = tk.Frame(root, bg=BG)
